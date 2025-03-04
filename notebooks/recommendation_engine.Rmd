@@ -1,0 +1,7 @@
+# Load required libraries
+library(dplyr)
+library(tidyr)
+library(recommenderlab)
+
+# Load processed data
+processed_data <- read.csv("../data/processed/processed_user_data.csv")

@@ -1,0 +1,10 @@
+Rcpp
+rvest
+dplyr
+tidyverse
+caret
+recommenderlab
+jsonlite
+httr
+stringr
+lubridate

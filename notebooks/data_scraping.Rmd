@@ -1,0 +1,53 @@
+library(rvest)
+library(dplyr)
+library(stringr)
+library(jsonlite)
+library(httr)
+
+
+# Function to get tweets from Twitter API
+get_tweets <- function(query, n = 100) {
+  url <- "https://api.twitter.com/2/tweets/search/recent"
+  params <- list(
+    query = query,
+    max_results = n
+  )
+  headers <- c(
+    `Authorization` = paste("Bearer", Sys.getenv("TWITTER_BEARER_TOKEN"))
+  )
+  response <- GET(url, query = params, add_headers(.headers = headers))
+  content <- content(response, as = "parsed", type = "application/json")
+  return(content$data)
+}
+
+# Function to get posts from Reddit API
+get_reddit_posts <- function(subreddit, n = 100) {
+  url <- paste0("https://www.reddit.com/r/", subreddit, "/new.json")
+  params <- list(
+    limit = n
+  )
+  response <- GET(url, query = params, user_agent("R"))
+  content <- content(response, as = "parsed", type = "application/json")
+  return(content$data$children)
+}
+
+# Function to get posts from Mastodon API
+get_mastodon_posts <- function(hashtag, n = 100) {
+  url <- paste0("https://mastodon.social/api/v1/timelines/tag/", hashtag)
+  params <- list(
+    limit = n
+  )
+  response <- GET(url, query = params)
+  content <- content(response, as = "parsed", type = "application/json")
+  return(content)
+}
+
+# Example usage
+tweets <- get_tweets("data science", n = 10)
+reddit_posts <- get_reddit_posts("datascience", n = 10)
+mastodon_posts <- get_mastodon_posts("datascience", n = 10)
+
+# Print the results
+print(tweets)
+print(reddit_posts)
+print(mastodon_posts)
